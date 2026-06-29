@@ -3,184 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>IELTS Writing AI Examiner | @rakhmanovcs</title>
+<title>IELTS Writing AI | @rakhmanovcs</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ECF0F8;color:#16263D;-webkit-tap-highlight-color:transparent}
-:root{
-  --nv:#0F1E3C;--nv2:#1B3063;--gd:#C8A23E;--gd2:#E2BB5A;
-  --wh:#fff;--bg:#ECF0F8;--bd:#D8E0EE;--mt:#6278A0;
-  --gn:#15803D;--gnb:#DCFCE7;--am:#B45309;--amb:#FEF3C7;
-  --r:14px;--sh:0 2px 16px rgba(15,30,60,.09);--sh2:0 6px 32px rgba(15,30,60,.14);
-  --tr:all .24s cubic-bezier(.4,0,.2,1)
-}
+:root{--nv:#0F1E3C;--nv2:#1B3063;--gd:#C8A23E;--gd2:#E2BB5A;--wh:#fff;--bg:#ECF0F8;--bd:#D8E0EE;--mt:#6278A0;--gn:#15803D;--gnb:#DCFCE7;--am:#B45309;--amb:#FEF3C7;--r:14px;--sh:0 2px 16px rgba(15,30,60,.09);--sh2:0 6px 32px rgba(15,30,60,.14);--tr:all .24s cubic-bezier(.4,0,.2,1)}
 #modal{position:fixed;inset:0;background:rgba(10,18,34,.85);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px}
 #modal.hidden{display:none}
 .mbox{background:var(--nv);border-radius:20px;padding:36px 28px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.mlogo{font-size:52px;margin-bottom:16px}
-.mtag{color:var(--gd);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
-.mh{color:#fff;font-size:24px;font-weight:800;line-height:1.3;margin-bottom:8px}
-.mp{color:rgba(255,255,255,.6);font-size:14px;line-height:1.6;margin-bottom:26px}
-.tgbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#0088cc;color:#fff;border:none;border-radius:50px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;margin-bottom:12px;transition:var(--tr)}
-.tgbtn:hover{background:#0077b5}
-.skipbtn{background:none;border:none;color:rgba(255,255,255,.4);font-size:14px;cursor:pointer;padding:8px;width:100%;text-decoration:underline;transition:var(--tr)}
-.skipbtn:hover{color:rgba(255,255,255,.7)}
-.screen{display:none;min-height:100vh;flex-direction:column}
-.screen.active{display:flex}
+.mlogo{font-size:52px;margin-bottom:16px}.mtag{color:var(--gd);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.mh{color:#fff;font-size:24px;font-weight:800;line-height:1.3;margin-bottom:8px}.mp{color:rgba(255,255,255,.6);font-size:14px;line-height:1.6;margin-bottom:26px}
+.tgbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#0088cc;color:#fff;border:none;border-radius:50px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;margin-bottom:12px;transition:var(--tr)}.tgbtn:hover{background:#0077b5}
+.skipbtn{background:none;border:none;color:rgba(255,255,255,.4);font-size:14px;cursor:pointer;padding:8px;width:100%;text-decoration:underline}
+.screen{display:none;min-height:100vh;flex-direction:column}.screen.active{display:flex}
+/* HOME */
 #s-home{background:var(--bg)}
 .htop{background:var(--nv);padding:20px 20px 46px}
 .hrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:9px}
-.bsq{width:32px;height:32px;background:var(--gd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
-.bnm{color:#fff;font-size:13px;font-weight:700}
-.tgpill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border-radius:50px;padding:6px 12px;color:rgba(255,255,255,.8);font-size:12px;font-weight:600;text-decoration:none;transition:var(--tr)}
-.tgpill:hover{background:rgba(255,255,255,.2)}
-.hhero h1{color:#fff;font-size:25px;font-weight:800;line-height:1.25;margin-bottom:5px}
-.hhero p{color:rgba(255,255,255,.55);font-size:13px}
+.brand{display:flex;align-items:center;gap:9px}.bsq{width:32px;height:32px;background:var(--gd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}.bnm{color:#fff;font-size:13px;font-weight:700}
+.tgpill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border-radius:50px;padding:6px 12px;color:rgba(255,255,255,.8);font-size:12px;font-weight:600;text-decoration:none}
+.hhero h1{color:#fff;font-size:25px;font-weight:800;line-height:1.25;margin-bottom:5px}.hhero p{color:rgba(255,255,255,.55);font-size:13px}
 .namewrap{background:rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;margin-top:18px;display:flex;align-items:center;gap:10px}
-.namewrap input{flex:1;background:none;border:none;color:#fff;font-size:15px;outline:none;font-family:inherit}
-.namewrap input::placeholder{color:rgba(255,255,255,.4)}
+.namewrap input{flex:1;background:none;border:none;color:#fff;font-size:15px;outline:none;font-family:inherit}.namewrap input::placeholder{color:rgba(255,255,255,.4)}
 .hbody{padding:20px;margin-top:-16px}
 .slbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--mt);margin:4px 0 14px}
 .tgrid{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
-.tc{background:var(--wh);border-radius:var(--r);padding:17px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:var(--tr);border:2px solid transparent;box-shadow:var(--sh)}
-.tc:hover{border-color:var(--gd);transform:translateY(-2px);box-shadow:var(--sh2)}
-.tico{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.t1c{background:#DBEAFE}.t2c{background:#D1FAE5}.tfc{background:#FEF3C7}
-.tinf{flex:1}
-.tinf h3{font-size:15px;font-weight:700;color:var(--nv);margin-bottom:3px}
-.tinf p{font-size:12px;color:var(--mt)}
-.trt{text-align:right;flex-shrink:0}
-.ttm{font-size:13px;font-weight:700;color:var(--nv)}
-.twc{font-size:11px;color:var(--mt);margin-top:2px}
-.cdiwrap{background:linear-gradient(135deg,#0F1E3C,#1B3063);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;gap:13px;text-decoration:none;transition:var(--tr)}
-.cdiwrap:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.tc{background:var(--wh);border-radius:var(--r);padding:17px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:var(--tr);border:2px solid transparent;box-shadow:var(--sh)}.tc:hover{border-color:var(--gd);transform:translateY(-2px);box-shadow:var(--sh2)}
+.tico{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}.t1c{background:#DBEAFE}.t2c{background:#D1FAE5}.tfc{background:#FEF3C7}
+.tinf{flex:1}.tinf h3{font-size:15px;font-weight:700;color:var(--nv);margin-bottom:3px}.tinf p{font-size:12px;color:var(--mt)}
+.trt{text-align:right;flex-shrink:0}.ttm{font-size:13px;font-weight:700;color:var(--nv)}.twc{font-size:11px;color:var(--mt);margin-top:2px}
+.cdiwrap{background:linear-gradient(135deg,#0F1E3C,#1B3063);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;gap:13px;text-decoration:none;transition:var(--tr)}.cdiwrap:hover{transform:translateY(-2px)}
 .cdiic{width:44px;height:44px;background:#0088cc;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.cditx strong{display:block;color:#fff;font-size:13px;font-weight:700;margin-bottom:2px}
-.cditx span{color:rgba(255,255,255,.5);font-size:12px}
-.cdiar{color:var(--gd);font-size:18px;margin-left:auto}
+.cditx strong{display:block;color:#fff;font-size:13px;font-weight:700;margin-bottom:2px}.cditx span{color:rgba(255,255,255,.5);font-size:12px}.cdiar{color:var(--gd);font-size:18px;margin-left:auto}
+/* SETUP */
+#s-setup{background:var(--bg)}
+.setup-body{flex:1;overflow-y:auto;padding:16px}
+.optcard{background:var(--wh);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--sh)}
+.opthd{display:flex;align-items:center;gap:12px;margin-bottom:14px}.optico{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.opthd strong{display:block;font-size:14px;font-weight:700;color:var(--nv);margin-bottom:2px}.opthd p{font-size:12px;color:var(--mt)}
+.cdilnk{display:flex;align-items:center;justify-content:center;gap:8px;background:#0088cc;color:#fff;border-radius:10px;padding:12px;text-decoration:none;font-size:14px;font-weight:600;margin-bottom:14px;transition:var(--tr)}.cdilnk:hover{background:#0077b5}
+.pzone{border:2px dashed var(--bd);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:var(--tr);background:var(--bg)}.pzone:hover{border-color:var(--gd);background:#FFFAED}.pzone.hasimg{border:2px solid var(--gn);padding:8px;background:#F0FFF4}
+.pzone-ico{font-size:40px;margin-bottom:10px}.pzone p{font-size:13px;font-weight:600;color:var(--nv);margin:3px 0}.pzone .sub{font-size:11px;color:var(--mt)}
+.txtzone textarea{width:100%;border:2px solid var(--bd);border-radius:10px;padding:12px;font-size:14px;line-height:1.7;color:#16263D;min-height:130px;font-family:inherit;outline:none;resize:vertical;transition:border-color .2s}.txtzone textarea:focus{border-color:var(--nv)}
+.custbtn{width:100%;background:var(--nv);color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;transition:var(--tr)}.custbtn:hover:not(:disabled){background:var(--nv2)}.custbtn:disabled{opacity:.35;cursor:not-allowed}
+.ordiv{text-align:center;font-size:12px;font-weight:700;color:var(--mt);letter-spacing:1px;margin:10px 0}
+.builtcard{cursor:pointer;display:flex;align-items:center;gap:13px;transition:var(--tr)}.builtcard:hover{border-color:var(--gd);transform:translateY(-1px);box-shadow:var(--sh2)}.builtcard .arr{color:var(--gd);font-size:22px;margin-left:auto}
+/* TASK */
 #s-task{background:var(--bg)}
 .thdr{background:var(--nv);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:20}
-.backbtn{background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;flex-shrink:0;transition:var(--tr)}
-.backbtn:hover{background:rgba(255,255,255,.2)}
-.thdrmid{text-align:center;flex:1}
-.thdrmid h3{color:#fff;font-size:14px;font-weight:700}
-.thdrmid p{color:rgba(255,255,255,.5);font-size:11px;margin-top:1px}
-.tmr{background:rgba(255,255,255,.1);border-radius:9px;padding:6px 12px;min-width:72px;text-align:center;flex-shrink:0}
-.tmrv{color:#fff;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-.tmrl{color:rgba(255,255,255,.5);font-size:10px;font-weight:600;letter-spacing:.5px}
-.tmr.warn{background:rgba(185,28,28,.35)}
-.tmr.warn .tmrv{color:#FCA5A5}
+.backbtn{background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;flex-shrink:0}
+.thdrmid{text-align:center;flex:1}.thdrmid h3{color:#fff;font-size:14px;font-weight:700}.thdrmid p{color:rgba(255,255,255,.5);font-size:11px;margin-top:1px}
+.tmr{background:rgba(255,255,255,.1);border-radius:9px;padding:6px 12px;min-width:72px;text-align:center;flex-shrink:0}.tmrv{color:#fff;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}.tmrl{color:rgba(255,255,255,.5);font-size:10px;font-weight:600;letter-spacing:.5px}.tmr.warn{background:rgba(185,28,28,.35)}.tmr.warn .tmrv{color:#FCA5A5}
 .tscroll{flex:1;overflow-y:auto;padding:16px;padding-bottom:86px}
 .srcnote{display:flex;align-items:center;gap:6px;background:var(--gnb);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--gn);margin-bottom:12px}
 .qcard{background:var(--wh);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--sh)}
 .tbadge{display:inline-flex;align-items:center;gap:5px;background:var(--nv);color:var(--gd);border-radius:50px;padding:3px 11px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px}
-.czone{background:#F5F8FD;border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--bd)}
-.ch{position:relative;height:250px}
-.qtxt{font-size:14px;line-height:1.75;color:#16263D}
-.qlet{font-size:14px;line-height:1.8;color:#16263D;white-space:pre-line}
+.czone{background:#F5F8FD;border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--bd)}.ch{position:relative;height:250px}
+.qtxt{font-size:14px;line-height:1.75;color:#16263D}.qlet{font-size:14px;line-height:1.8;color:#16263D;white-space:pre-line}
 .wcard{background:var(--wh);border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
-.wtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.wlbl{font-size:13px;font-weight:700;color:var(--nv)}
-.wc{background:var(--bg);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:700;color:var(--mt);transition:var(--tr)}
-.wc.ok{background:var(--gnb);color:var(--gn)}
-.wc.low{background:var(--amb);color:var(--am)}
-.wctr{height:4px;background:var(--bd);border-radius:2px;margin-bottom:11px;overflow:hidden}
-.wcfl{height:100%;width:0;background:var(--gd);border-radius:2px;transition:width .4s ease}
-.wcfl.ok{background:var(--gn)}
-textarea{width:100%;border:2px solid var(--bd);border-radius:10px;padding:13px;font-size:15px;line-height:1.8;color:#16263D;resize:vertical;min-height:220px;font-family:inherit;outline:none;transition:border-color .2s}
-textarea:focus{border-color:var(--nv)}
+.wtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.wlbl{font-size:13px;font-weight:700;color:var(--nv)}
+.wc{background:var(--bg);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:700;color:var(--mt);transition:var(--tr)}.wc.ok{background:var(--gnb);color:var(--gn)}.wc.low{background:var(--amb);color:var(--am)}
+.wctr{height:4px;background:var(--bd);border-radius:2px;margin-bottom:11px;overflow:hidden}.wcfl{height:100%;width:0;background:var(--gd);border-radius:2px;transition:width .4s ease}.wcfl.ok{background:var(--gn)}
+textarea{width:100%;border:2px solid var(--bd);border-radius:10px;padding:13px;font-size:15px;line-height:1.8;color:#16263D;resize:vertical;min-height:220px;font-family:inherit;outline:none;transition:border-color .2s}textarea:focus{border-color:var(--nv)}
 .whint{font-size:12px;color:var(--mt);margin-top:7px}
 .subbar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--bd);padding:13px 16px;z-index:20}
-.gobtn{width:100%;background:var(--nv);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:7px}
-.gobtn:hover:not(:disabled){background:var(--nv2)}
-.gobtn:disabled{opacity:.4;cursor:not-allowed}
+.gobtn{width:100%;background:var(--nv);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:7px}.gobtn:hover:not(:disabled){background:var(--nv2)}.gobtn:disabled{opacity:.4;cursor:not-allowed}
+/* TRANS */
 #s-trans{background:var(--nv);align-items:center;justify-content:center;text-align:center;padding:40px 24px}
-.trico{font-size:64px;margin-bottom:20px;animation:pp 2s ease-in-out infinite}
-.trh{color:#fff;font-size:24px;font-weight:800;margin-bottom:8px}
-.trp{color:rgba(255,255,255,.6);font-size:14px;line-height:1.6;margin-bottom:32px}
-.trbtn{background:var(--gd);color:var(--nv);border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:800;cursor:pointer;transition:var(--tr)}
-.trbtn:hover{background:var(--gd2)}
+.trico{font-size:64px;margin-bottom:20px;animation:pp 2s ease-in-out infinite}.trh{color:#fff;font-size:24px;font-weight:800;margin-bottom:8px}.trp{color:rgba(255,255,255,.6);font-size:14px;line-height:1.6;margin-bottom:32px}
+.trbtn{background:var(--gd);color:var(--nv);border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:800;cursor:pointer}
+/* LOAD */
 #s-load{background:var(--nv);align-items:center;justify-content:center;padding:40px 24px;text-align:center}
 .ldring{width:84px;height:84px;border-radius:50%;border:4px solid rgba(200,162,62,.2);border-top-color:var(--gd);animation:spin 1s linear infinite;margin:0 auto 24px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ldh{color:#fff;font-size:19px;font-weight:800;margin-bottom:6px}
-.ldp{color:rgba(255,255,255,.5);font-size:13px;margin-bottom:28px}
+.ldh{color:#fff;font-size:19px;font-weight:800;margin-bottom:6px}.ldp{color:rgba(255,255,255,.5);font-size:13px;margin-bottom:28px}
 .ldlist{display:flex;flex-direction:column;gap:11px;max-width:260px;margin:0 auto}
-.ldi{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:rgba(255,255,255,.3);transition:var(--tr)}
-.ldi.act{color:#fff}.ldi.done{color:var(--gd)}
-.ldd{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+.ldi{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:rgba(255,255,255,.3);transition:var(--tr)}.ldi.act{color:#fff}.ldi.done{color:var(--gd)}.ldd{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+/* RESULTS */
 #s-results{background:var(--bg)}
-.rshero{background:var(--nv);padding:28px 20px 52px;text-align:center}
-.rslbl{color:rgba(255,255,255,.5);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
-.rsnm{color:#fff;font-size:17px;font-weight:700;margin-bottom:22px}
+.rshero{background:var(--nv);padding:28px 20px 52px;text-align:center}.rslbl{color:rgba(255,255,255,.5);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}.rsnm{color:#fff;font-size:17px;font-weight:700;margin-bottom:22px}
 .band{width:118px;height:118px;background:var(--gd);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 0 0 8px rgba(200,162,62,.22),0 10px 44px rgba(200,162,62,.38);animation:pop .65s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
-.bandn{font-size:46px;font-weight:900;color:var(--nv);line-height:1}
-.bandl{font-size:10px;font-weight:800;color:var(--nv);letter-spacing:1px;text-transform:uppercase}
+.bandn{font-size:46px;font-weight:900;color:var(--nv);line-height:1}.bandl{font-size:10px;font-weight:800;color:var(--nv);letter-spacing:1px;text-transform:uppercase}
 .rsbody{padding:18px;margin-top:-20px}
-.rc{background:var(--wh);border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:14px}
-.rc h3{font-size:12px;font-weight:800;color:var(--nv);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
-.cr{margin-bottom:16px}.cr:last-child{margin-bottom:0}
-.crow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.crnm{font-size:13px;font-weight:700;color:#16263D}
-.crsc{font-size:17px;font-weight:800;color:var(--nv)}
-.crbar{height:5px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:5px}
-.crfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#1D4ED8,#4F46E5);transition:width 1.1s cubic-bezier(.4,0,.2,1)}
-.crfb{font-size:12px;color:var(--mt);line-height:1.55}
-.sumtxt{font-size:14px;line-height:1.75;color:#16263D;margin-bottom:16px}
-.listh{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
-.listh.g{color:var(--gn)}.listh.a{color:var(--am)}
-.liul{list-style:none;margin-bottom:14px}
-.liul li{display:flex;gap:9px;font-size:13px;line-height:1.55;padding:3px 0;color:#16263D}
-.liul.g li::before{content:"✓";color:var(--gn);font-weight:700;flex-shrink:0}
-.liul.a li::before{content:"→";color:var(--am);font-weight:700;flex-shrink:0}
+.rc{background:var(--wh);border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:14px}.rc h3{font-size:12px;font-weight:800;color:var(--nv);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.cr{margin-bottom:16px}.cr:last-child{margin-bottom:0}.crow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}.crnm{font-size:13px;font-weight:700;color:#16263D}.crsc{font-size:17px;font-weight:800;color:var(--nv)}
+.crbar{height:5px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:5px}.crfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#1D4ED8,#4F46E5);transition:width 1.1s cubic-bezier(.4,0,.2,1)}.crfb{font-size:12px;color:var(--mt);line-height:1.55}
+.sumtxt{font-size:14px;line-height:1.75;color:#16263D;margin-bottom:16px}.listh{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}.listh.g{color:var(--gn)}.listh.a{color:var(--am)}
+.liul{list-style:none;margin-bottom:14px}.liul li{display:flex;gap:9px;font-size:13px;line-height:1.55;padding:3px 0;color:#16263D}.liul.g li::before{content:"✓";color:var(--gn);font-weight:700;flex-shrink:0}.liul.a li::before{content:"→";color:var(--am);font-weight:700;flex-shrink:0}
 .corr{background:#FFFAED;border-left:3px solid var(--gd);border-radius:0 9px 9px 0;padding:11px 13px;font-size:13px;line-height:1.6;color:#16263D}
-.dual{display:flex;gap:10px;margin-bottom:14px}
-.minib{flex:1;background:var(--wh);border-radius:var(--r);padding:16px 10px;text-align:center;box-shadow:var(--sh)}
-.minibt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mt);margin-bottom:6px}
-.minibs{font-size:34px;font-weight:900;color:var(--nv)}
-.minibsl{font-size:10px;color:var(--mt);margin-top:1px}
-.actrow{display:flex;gap:10px;margin-bottom:22px}
-.actbtn{flex:1;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;transition:var(--tr)}
-.actbtn.p{background:var(--nv);color:#fff}.actbtn.p:hover{background:var(--nv2)}
-.actbtn.s{background:var(--wh);color:var(--nv);border:2px solid var(--bd)}.actbtn.s:hover{border-color:var(--nv)}
+.dual{display:flex;gap:10px;margin-bottom:14px}.minib{flex:1;background:var(--wh);border-radius:var(--r);padding:16px 10px;text-align:center;box-shadow:var(--sh)}.minibt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mt);margin-bottom:6px}.minibs{font-size:34px;font-weight:900;color:var(--nv)}.minibsl{font-size:10px;color:var(--mt);margin-top:1px}
+.actrow{display:flex;gap:10px;margin-bottom:22px}.actbtn{flex:1;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;transition:var(--tr)}.actbtn.p{background:var(--nv);color:#fff}.actbtn.p:hover{background:var(--nv2)}.actbtn.s{background:var(--wh);color:var(--nv);border:2px solid var(--bd)}.actbtn.s:hover{border-color:var(--nv)}
 .ftr{text-align:center;font-size:12px;color:var(--mt);padding-bottom:32px}
 @keyframes pp{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 @media(min-width:540px){.tgrid{flex-direction:row;flex-wrap:wrap}.tc{flex:calc(50% - 6px)}.tc:last-child{flex:100%}}
-@media(min-width:680px){.hbody,.tscroll,.rsbody{max-width:640px;margin-left:auto;margin-right:auto}.htop,.thdr,.rshero{padding-left:calc(50% - 320px + 20px);padding-right:calc(50% - 320px + 20px)}.subbar{padding-left:calc(50% - 320px + 16px);padding-right:calc(50% - 320px + 16px)}}
+@media(min-width:680px){.hbody,.setup-body,.tscroll,.rsbody{max-width:640px;margin-left:auto;margin-right:auto}.htop,.thdr,.rshero{padding-left:calc(50% - 320px + 20px);padding-right:calc(50% - 320px + 20px)}.subbar{padding-left:calc(50% - 320px + 16px);padding-right:calc(50% - 320px + 16px)}}
 </style>
 </head>
 <body>
 
+<!-- MODAL -->
 <div id="modal">
   <div class="mbox">
     <div class="mlogo">✍️</div>
     <div class="mtag">@rakhmanovcs</div>
-    <h2 class="mh">IELTS Writing<br>AI Examiner</h2>
-    <p class="mp">Haqiqiy IELTS imtihonidek baholaydi.<br>Yangi testlar uchun kanalga obuna bo'ling!</p>
+    <h2 class="mh">IELTS Writing AI Examiner</h2>
+    <p class="mp">Haqiqiy IELTS imtihonidek baholaydi. Yangi testlar uchun kanalga obuna bo'ling!</p>
     <a href="https://t.me/rakhmanovcs" target="_blank" class="tgbtn">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.026 9.552c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.348l-2.95-.924c-.642-.2-.655-.642.136-.951l11.539-4.451c.534-.194 1.002.13.357 2.226z"/></svg>
       @rakhmanovcs — Obuna bo'lish
     </a>
-    <button class="skipbtn" onclick="closeModal()">Hozircha o'tkazib yuborish →</button>
+    <button class="skipbtn" onclick="closeModal()">O'tkazib yuborish →</button>
   </div>
 </div>
 
+<!-- HOME -->
 <div id="s-home" class="screen">
   <div class="htop">
     <div class="hrow">
       <div class="brand"><div class="bsq">📚</div><span class="bnm">IELTS Writing AI</span></div>
-      <a href="https://t.me/rakhmanovcs" target="_blank" class="tgpill">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.026 9.552c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.348l-2.95-.924c-.642-.2-.655-.642.136-.951l11.539-4.451c.534-.194 1.002.13.357 2.226z"/></svg>
-        @rakhmanovcs
-      </a>
+      <a href="https://t.me/rakhmanovcs" target="_blank" class="tgpill">@rakhmanovcs</a>
     </div>
-    <div class="hhero">
-      <h1>Real IELTS Writing<br>AI Examiner</h1>
-      <p>Cambridge IELTS + haqiqiy imtihon savollari</p>
-    </div>
+    <div class="hhero"><h1>Real IELTS Writing<br>AI Examiner</h1><p>Cambridge IELTS + haqiqiy imtihon savollari</p></div>
     <div class="namewrap">
       <span style="color:var(--gd);font-size:18px">👤</span>
       <input id="nameinp" type="text" placeholder="Ismingiz (ixtiyoriy)" maxlength="60" oninput="saveName()">
@@ -189,19 +134,19 @@ textarea:focus{border-color:var(--nv)}
   <div class="hbody">
     <div class="slbl">Qaysi qismni boshlaysiz?</div>
     <div class="tgrid">
-      <div class="tc" onclick="go(1)">
+      <div class="tc" onclick="setupTask(1)">
         <div class="tico t1c">📊</div>
-        <div class="tinf"><h3>Writing Task 1</h3><p>Grafik · Diagramma · Xat (GT)</p></div>
+        <div class="tinf"><h3>Writing Task 1</h3><p>Grafik · Diagramma · Xat</p></div>
         <div class="trt"><div class="ttm">⏱ 20 daq</div><div class="twc">min 150 so'z</div></div>
       </div>
-      <div class="tc" onclick="go(2)">
+      <div class="tc" onclick="setupTask(2)">
         <div class="tico t2c">✍️</div>
         <div class="tinf"><h3>Writing Task 2</h3><p>Essay · Fikr · Muhokama</p></div>
         <div class="trt"><div class="ttm">⏱ 40 daq</div><div class="twc">min 250 so'z</div></div>
       </div>
-      <div class="tc" onclick="go('full')">
+      <div class="tc" onclick="setupTask('full')">
         <div class="tico tfc">🏆</div>
-        <div class="tinf"><h3>To'liq Writing Test</h3><p>Task 1 + Task 2 — haqiqiy imtihon formati</p></div>
+        <div class="tinf"><h3>To'liq Writing Test</h3><p>Task 1 + Task 2 — real format</p></div>
         <div class="trt"><div class="ttm">⏱ 60 daq</div><div class="twc">Ikki qism</div></div>
       </div>
     </div>
@@ -214,41 +159,79 @@ textarea:focus{border-color:var(--nv)}
   </div>
 </div>
 
+<!-- SETUP -->
+<div id="s-setup" class="screen">
+  <div class="thdr">
+    <button class="backbtn" onclick="show('s-home')">‹</button>
+    <div class="thdrmid"><h3 id="setup-title">Savol manbai</h3><p>CDI_Report yoki saytdagi savollar</p></div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="setup-body">
+
+    <!-- CDI card -->
+    <div class="optcard">
+      <div class="opthd">
+        <div class="optico" style="background:#E0F2FE">📋</div>
+        <div><strong>CDI_Report — Haqiqiy test</strong><p>Kanaldan so'nggi real IELTS testini oling</p></div>
+      </div>
+      <a href="https://t.me/CDI_Report" target="_blank" class="cdilnk">📲 CDI_Report kanalini ochish</a>
+
+      <!-- Image zone (Task 1) -->
+      <div id="imgzone" class="pzone" onclick="document.getElementById('fi').click()">
+        <div id="phint">
+          <div class="pzone-ico">🖼️</div>
+          <p>Rasmni <b>Ctrl+V</b> bilan joylashtiring</p>
+          <p class="sub">yoki bosib fayldan tanlang</p>
+        </div>
+        <img id="imgprev" style="display:none;width:100%;border-radius:8px;pointer-events:none">
+      </div>
+      <input type="file" id="fi" accept="image/*" style="display:none" onchange="handleFI(this)">
+
+      <!-- Text zone (Task 2) -->
+      <div id="txtzone" class="txtzone">
+        <textarea id="tasktxt" placeholder="Task 2 matnini CDI_Report kanalidan nusxalab bu yerga joylashtiring..." oninput="onTT()"></textarea>
+      </div>
+
+      <button id="custbtn" class="custbtn" onclick="startCustom()" disabled>Shu savol bilan boshlash →</button>
+    </div>
+
+    <div class="ordiv">— YOKI —</div>
+
+    <!-- Built-in card -->
+    <div class="optcard builtcard" onclick="startBuiltin()">
+      <div class="optico" style="background:var(--amb)">📚</div>
+      <div style="flex:1"><strong style="display:block;font-size:14px;font-weight:700;color:var(--nv);margin-bottom:2px">Saytdagi savollardan</strong><p style="font-size:12px;color:var(--mt)">Cambridge IELTS + real imtihon savollari</p></div>
+      <span class="arr">›</span>
+    </div>
+  </div>
+</div>
+
+<!-- TASK -->
 <div id="s-task" class="screen">
   <div class="thdr">
     <button class="backbtn" onclick="askBack()">‹</button>
-    <div class="thdrmid">
-      <h3 id="ttitle">Writing Task 1</h3>
-      <p id="tsub">Kamida 150 so'z yozing</p>
-    </div>
-    <div class="tmr" id="tmr">
-      <div class="tmrv" id="tmrv">20:00</div>
-      <div class="tmrl">VAQT</div>
-    </div>
+    <div class="thdrmid"><h3 id="ttitle">Writing Task 1</h3><p id="tsub">Kamida 150 so'z yozing</p></div>
+    <div class="tmr" id="tmr"><div class="tmrv" id="tmrv">20:00</div><div class="tmrl">VAQT</div></div>
   </div>
   <div class="tscroll">
     <div class="srcnote" id="srcnote">✅ Haqiqiy IELTS imtihonidan</div>
     <div class="qcard">
       <span class="tbadge" id="tbadge">📊 TASK 1</span>
-      <div class="czone" id="czone" style="display:none"><div class="ch"><canvas id="cht"></canvas></div></div>
+      <div class="czone" id="czone" style="display:none"><div class="ch" id="chbox"><canvas id="cht"></canvas></div></div>
       <p class="qtxt" id="qtxt"></p>
       <p class="qlet" id="qlet" style="display:none"></p>
     </div>
     <div class="wcard">
-      <div class="wtop">
-        <span class="wlbl">Javobingiz</span>
-        <span class="wc" id="wcbadge">0 so'z</span>
-      </div>
+      <div class="wtop"><span class="wlbl">Javobingiz</span><span class="wc" id="wcbadge">0 so'z</span></div>
       <div class="wctr"><div class="wcfl" id="wcfl"></div></div>
       <textarea id="ta" placeholder="Javobingizni shu yerda yozing..." oninput="onType()"></textarea>
       <p class="whint" id="whint">Kamida 150 ta so'z yozing</p>
     </div>
   </div>
-  <div class="subbar">
-    <button class="gobtn" id="gobtn" onclick="doSubmit()" disabled>⚡ AI tekshiruvi — Band Score olish</button>
-  </div>
+  <div class="subbar"><button class="gobtn" id="gobtn" onclick="doSubmit()" disabled>⚡ AI tekshiruvi — Band Score olish</button></div>
 </div>
 
+<!-- TRANSITION -->
 <div id="s-trans" class="screen">
   <div class="trico">✅</div>
   <h2 class="trh">Task 1 tayyor!</h2>
@@ -256,10 +239,11 @@ textarea:focus{border-color:var(--nv)}
   <button class="trbtn" onclick="startT2()">Task 2 ni boshlash →</button>
 </div>
 
+<!-- LOADING -->
 <div id="s-load" class="screen">
   <div class="ldring"></div>
   <div class="ldh">AI Examiner baholayapti…</div>
-  <div class="ldp">Haqiqiy IELTS kriteriyalari bo'yicha tekshirilmoqda</div>
+  <div class="ldp">Haqiqiy IELTS kriteriyalari bo'yicha</div>
   <div class="ldlist">
     <div class="ldi" id="li0"><span class="ldd"></span>Task Achievement</div>
     <div class="ldi" id="li1"><span class="ldd"></span>Coherence &amp; Cohesion</div>
@@ -268,6 +252,7 @@ textarea:focus{border-color:var(--nv)}
   </div>
 </div>
 
+<!-- RESULTS -->
 <div id="s-results" class="screen">
   <div class="rshero">
     <div class="rslbl">IELTS Band Score</div>
@@ -278,71 +263,35 @@ textarea:focus{border-color:var(--nv)}
 </div>
 
 <script>
-const S={name:'',mode:null,phase:null,t1:null,t2:null,t1r:'',t2r:'',r1:null,r2:null,tmr:null,left:0,min:150,chart:null,busy:false};
+const S={name:'',mode:null,phase:null,t1:null,t2:null,t1r:'',t2r:'',r1:null,r2:null,tmr:null,left:0,min:150,chart:null,busy:false,img:null,imgType:null};
 
 const T1=[
-  {id:'c8',src:'Cambridge IELTS 8 — Test 1',type:'line',
-   q:'The graph below shows the percentage of people aged 65 and over in three countries from 1940 to 2040.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'Population Aged 65 and Over (%)',yLbl:'Percentage (%)',xLbl:'Year',
-   lbls:['1940','1960','1980','2000','2020*','2040*'],
-   ds:[{l:'Japan',d:[5,6,9,17,26,27],c:'#DC2626'},{l:'Sweden',d:[7,12,16,17,20,23],c:'#2563EB'},{l:'USA',d:[9,9,12,12,16,21],c:'#16A34A'}]},
-  {id:'c9',src:'Cambridge IELTS 9 — Test 1',type:'line',
-   q:'The graph below shows changes in the amount and type of fast food consumed by Australian teenagers from 1975 to 2000.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'Fast Food Consumed by Australian Teenagers (portions/week)',yLbl:'Portions per week',xLbl:'Year',
-   lbls:['1975','1980','1985','1990','1995','2000'],
-   ds:[{l:'Fish & chips',d:[100,95,83,63,53,42],c:'#2563EB'},{l:'Hamburgers',d:[85,90,95,95,100,100],c:'#DC2626'},{l:'Pizza',d:[5,10,15,30,67,83],c:'#F59E0B'}]},
-  {id:'c11',src:'Cambridge IELTS 11 — Test 1',type:'bar',
-   q:'The chart below shows the percentage of households in owned and rented accommodation in England and Wales between 1918 and 2011.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'Households: Owned vs Rented in England & Wales (%)',yLbl:'Percentage (%)',xLbl:'Year',
-   lbls:['1918','1939','1953','1961','1971','1981','1991','2001','2011'],
-   ds:[{l:'Owned',d:[23,26,32,43,52,58,67,69,65],c:'#2563EB'},{l:'Rented',d:[77,74,68,57,48,42,33,31,35],c:'#F59E0B'}]},
-  {id:'r24a',src:'Haqiqiy IELTS imtihoni (2024)',type:'bar',
-   q:'The chart below shows the number of different types of vehicles (in millions) registered in a European country in 1996 and 2006.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'Registered Vehicles in a European Country (millions)',yLbl:'Vehicles (millions)',xLbl:'Vehicle type',
-   lbls:['Cars','Vans','Motorcycles','Lorries','Buses'],
-   ds:[{l:'1996',d:[32,5,4,2,0.8],c:'#3B82F6'},{l:'2006',d:[45,8,7,3,1.0],c:'#F97316'}]},
-  {id:'r23a',src:'Haqiqiy IELTS imtihoni (2023)',type:'bar',
-   q:'The graph below shows the hours of teaching per year carried out by each teacher in four different countries in 2001.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'Teaching Hours Per Year by Country (2001)',yLbl:'Hours per year',xLbl:'Country',
-   lbls:['USA','Japan','Germany','France'],
-   ds:[{l:'Primary school',d:[1080,578,843,936],c:'#2563EB'},{l:'Secondary school',d:[1152,500,715,648],c:'#16A34A'}]},
-  {id:'r23b',src:'Haqiqiy IELTS imtihoni (2022–2023)',type:'line',
-   q:'The graph below shows the percentage of electricity generated from renewable sources in four countries between 2005 and 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'Electricity from Renewable Sources (%)',yLbl:'Percentage (%)',xLbl:'Year',
-   lbls:['2005','2008','2011','2014','2017','2020'],
-   ds:[{l:'Denmark',d:[28,34,41,53,62,78],c:'#DC2626'},{l:'Germany',d:[10,15,20,28,36,44],c:'#2563EB'},{l:'India',d:[14,16,20,26,34,38],c:'#F59E0B'},{l:'USA',d:[8,9,12,14,17,21],c:'#16A34A'}]},
-  {id:'r23c',src:'Haqiqiy IELTS imtihoni (2023)',type:'line',
-   q:'The line graph below shows the number of international students (in thousands) enrolled in higher education in three countries from 2000 to 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'International Students in Higher Education (thousands)',yLbl:'Students (thousands)',xLbl:'Year',
-   lbls:['2000','2005','2010','2015','2020'],
-   ds:[{l:'USA',d:[475,565,690,780,915],c:'#2563EB'},{l:'UK',d:[210,285,370,415,485],c:'#DC2626'},{l:'Australia',d:[100,175,250,345,460],c:'#16A34A'}]},
-  {id:'r23d',src:'Haqiqiy IELTS imtihoni (2023)',type:'doughnut',
-   q:'The pie chart below shows how consumers in a country spent their money on different categories of goods and services in 2022.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
-   title:'Consumer Spending by Category (2022)',
-   lbls:['Housing & utilities','Food & drink','Transport','Healthcare','Education','Entertainment','Other'],
-   data:[32,22,15,10,8,7,6],
-   clrs:['#3B82F6','#F59E0B','#10B981','#EC4899','#6366F1','#F97316','#94A3B8']},
-  {id:'gt1',type:'letter',src:'IELTS General Training',
-   q:'You stayed at a hotel recently and were not satisfied with the service.\n\nWrite a letter to the hotel manager. In your letter:\n• say when you stayed and what problems there were\n• explain how these problems affected your stay\n• say what you would like the manager to do\n\nWrite at least 150 words. You do NOT need to write your own address.\n\nBegin your letter as follows:\n\nDear Manager,'},
-  {id:'gt2',type:'letter',src:'Haqiqiy IELTS imtihoni (2024)',
-   q:"You recently stayed at a friend's house to look after it while he/she was away. You accidentally damaged something in the house.\n\nWrite a letter to your friend. In your letter:\n• describe what happened\n• explain when it happened\n• suggest how the damage can be repaired or replaced\n\nWrite at least 150 words.\n\nBegin your letter as follows:\n\nDear [Friend's name],"},
-  {id:'gt3',type:'letter',src:'IELTS General Training',
-   q:'You have seen an advertisement in a local newspaper for a part-time job at a company.\n\nWrite a letter to the company applying for this job. In your letter:\n• explain why you are interested in this job\n• describe your relevant experience and skills\n• say when you would be available for an interview\n\nWrite at least 150 words. You do NOT need to write your own address.\n\nBegin your letter as follows:\n\nDear Sir or Madam,'}
+  {id:'c8',src:'Cambridge IELTS 8 — Test 1',type:'line',q:'The graph below shows the percentage of people aged 65 and over in three countries from 1940 to 2040.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'Population Aged 65+ (%)',yLbl:'Percentage (%)',xLbl:'Year',lbls:['1940','1960','1980','2000','2020*','2040*'],ds:[{l:'Japan',d:[5,6,9,17,26,27],c:'#DC2626'},{l:'Sweden',d:[7,12,16,17,20,23],c:'#2563EB'},{l:'USA',d:[9,9,12,12,16,21],c:'#16A34A'}]},
+  {id:'c9',src:'Cambridge IELTS 9 — Test 1',type:'line',q:'The graph below shows changes in the amount and type of fast food consumed by Australian teenagers from 1975 to 2000.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'Fast Food — Australian Teenagers (portions/week)',yLbl:'Portions/week',xLbl:'Year',lbls:['1975','1980','1985','1990','1995','2000'],ds:[{l:'Fish & chips',d:[100,95,83,63,53,42],c:'#2563EB'},{l:'Hamburgers',d:[85,90,95,95,100,100],c:'#DC2626'},{l:'Pizza',d:[5,10,15,30,67,83],c:'#F59E0B'}]},
+  {id:'c11',src:'Cambridge IELTS 11 — Test 1',type:'bar',q:'The chart below shows the percentage of households in owned and rented accommodation in England and Wales between 1918 and 2011.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'Owned vs Rented Households — England & Wales (%)',yLbl:'Percentage (%)',xLbl:'Year',lbls:['1918','1939','1953','1961','1971','1981','1991','2001','2011'],ds:[{l:'Owned',d:[23,26,32,43,52,58,67,69,65],c:'#2563EB'},{l:'Rented',d:[77,74,68,57,48,42,33,31,35],c:'#F59E0B'}]},
+  {id:'r24a',src:'Haqiqiy IELTS imtihoni (2024)',type:'bar',q:'The chart below shows the number of different types of vehicles (in millions) registered in a European country in 1996 and 2006.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'Registered Vehicles — European Country (millions)',yLbl:'Vehicles (millions)',xLbl:'Vehicle type',lbls:['Cars','Vans','Motorcycles','Lorries','Buses'],ds:[{l:'1996',d:[32,5,4,2,0.8],c:'#3B82F6'},{l:'2006',d:[45,8,7,3,1.0],c:'#F97316'}]},
+  {id:'r23a',src:'Haqiqiy IELTS imtihoni (2023)',type:'bar',q:'The graph below shows the hours of teaching per year carried out by each teacher in four different countries in 2001.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'Teaching Hours Per Year (2001)',yLbl:'Hours/year',xLbl:'Country',lbls:['USA','Japan','Germany','France'],ds:[{l:'Primary',d:[1080,578,843,936],c:'#2563EB'},{l:'Secondary',d:[1152,500,715,648],c:'#16A34A'}]},
+  {id:'r23b',src:'Haqiqiy IELTS imtihoni (2022–2023)',type:'line',q:'The graph below shows the percentage of electricity generated from renewable sources in four countries between 2005 and 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'Electricity from Renewables (%)',yLbl:'Percentage (%)',xLbl:'Year',lbls:['2005','2008','2011','2014','2017','2020'],ds:[{l:'Denmark',d:[28,34,41,53,62,78],c:'#DC2626'},{l:'Germany',d:[10,15,20,28,36,44],c:'#2563EB'},{l:'India',d:[14,16,20,26,34,38],c:'#F59E0B'},{l:'USA',d:[8,9,12,14,17,21],c:'#16A34A'}]},
+  {id:'r23c',src:'Haqiqiy IELTS imtihoni (2023)',type:'line',q:'The line graph below shows the number of international students (in thousands) enrolled in higher education in three countries from 2000 to 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'International Students in Higher Education (thousands)',yLbl:'Students (thousands)',xLbl:'Year',lbls:['2000','2005','2010','2015','2020'],ds:[{l:'USA',d:[475,565,690,780,915],c:'#2563EB'},{l:'UK',d:[210,285,370,415,485],c:'#DC2626'},{l:'Australia',d:[100,175,250,345,460],c:'#16A34A'}]},
+  {id:'r23d',src:'Haqiqiy IELTS imtihoni (2023)',type:'doughnut',q:'The pie chart below shows how consumers in a country spent their money on different categories in 2022.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',title:'Consumer Spending by Category (2022)',lbls:['Housing','Food & drink','Transport','Healthcare','Education','Entertainment','Other'],data:[32,22,15,10,8,7,6],clrs:['#3B82F6','#F59E0B','#10B981','#EC4899','#6366F1','#F97316','#94A3B8']},
+  {id:'gt1',type:'letter',src:'IELTS General Training',q:'You stayed at a hotel recently and were not satisfied with the service.\n\nWrite a letter to the hotel manager. In your letter:\n• say when you stayed and what problems there were\n• explain how these problems affected your stay\n• say what you would like the manager to do\n\nWrite at least 150 words.\n\nBegin your letter as follows:\n\nDear Manager,'},
+  {id:'gt2',type:'letter',src:'Haqiqiy IELTS imtihoni (2024)',q:"You recently stayed at a friend's house to look after it while they were away. You accidentally damaged something.\n\nWrite a letter to your friend. In your letter:\n• describe what happened\n• explain when it happened\n• suggest how the damage can be repaired or replaced\n\nWrite at least 150 words.\n\nBegin your letter as follows:\n\nDear [Friend's name],"},
+  {id:'gt3',type:'letter',src:'IELTS General Training',q:'You have seen an advertisement for a part-time job at a company.\n\nWrite a letter applying for this job. In your letter:\n• explain why you are interested in this job\n• describe your relevant experience and skills\n• say when you would be available for an interview\n\nWrite at least 150 words.\n\nBegin your letter as follows:\n\nDear Sir or Madam,'}
 ];
 
 const T2=[
-  {id:'e1',src:'Haqiqiy IELTS imtihoni (2024)',q:'Some people say that to prevent illness and disease, governments should focus more on reducing environmental pollution and improving housing conditions.\n\nTo what extent do you agree or disagree?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e2',src:'Haqiqiy IELTS imtihoni (2024 — India)',q:'Large companies should pay much higher salaries to their Chief Executive Officers (CEOs) and senior managers than to ordinary employees.\n\nTo what extent do you agree or disagree?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e3',src:'Haqiqiy IELTS imtihoni (2024)',q:'In recent years, there has been a significant decline in the diversity of plant and animal species in many parts of the world.\n\nWhat are the main causes of this problem? What measures could be taken to address it?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e4',src:'Haqiqiy IELTS imtihoni (2023–2024)',q:'Large companies and businesses sponsor sports events as a way to advertise their products and services. Some people think this is good for sport, while others feel there are disadvantages.\n\nDiscuss both views and give your own opinion.\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e5',src:'Cambridge IELTS (classic)',q:'Some people believe that unpaid community service should be a compulsory part of high school and university programmes.\n\nTo what extent do you agree or disagree with this statement?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e6',src:'Haqiqiy IELTS imtihoni (2025–2026)',q:'Solar energy is becoming increasingly popular as a source of household energy in many countries.\n\nWhy is this? What are the advantages and disadvantages of solar energy compared to other energy sources?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e7',src:'Haqiqiy IELTS imtihoni (2023)',q:'Rich countries often give money to poorer countries, but this does not always solve the problem of poverty. Therefore, developed countries should provide other types of help to poorer nations rather than giving financial aid.\n\nTo what extent do you agree or disagree?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e8',src:'Haqiqiy IELTS imtihoni (2023)',q:'Some cities have introduced vehicle-free days on which private cars, trucks and motorcycles are banned from the city centre. People are encouraged to use public transport such as buses, taxis and the metro on those days.\n\nDo the advantages of this development outweigh the disadvantages?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e9',src:'Cambridge IELTS (classic)',q:'Some people think that parents should teach children how to be good members of society. Others, however, believe that school is the place to learn this.\n\nDiscuss both views and give your own opinion.\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e10',src:'Haqiqiy IELTS imtihoni (2022–2023)',q:'Many people are now working longer hours than they did in the past.\n\nWhat are the causes of this development? Do you think the effects on individuals and society are positive or negative?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e11',src:'Haqiqiy IELTS imtihoni (2023)',q:'Some people argue that it is better to live in a large city, while others prefer to live in a small town or rural area.\n\nDiscuss both views and give your own opinion.\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'},
-  {id:'e12',src:'Haqiqiy IELTS imtihoni (2024)',q:'While many people go to university to study academic subjects, some argue that more students should be encouraged to do vocational training because there is a serious lack of skilled workers such as electricians, plumbers and mechanics.\n\nDo you agree or disagree?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.'}
+  {id:'e1',src:'Haqiqiy IELTS (2024)',q:'Some people say that to prevent illness and disease, governments should focus more on reducing environmental pollution and improving housing conditions.\n\nTo what extent do you agree or disagree?\n\nWrite at least 250 words.'},
+  {id:'e2',src:'Haqiqiy IELTS (2024)',q:'Large companies should pay much higher salaries to their CEOs and senior managers than to ordinary employees.\n\nTo what extent do you agree or disagree?\n\nWrite at least 250 words.'},
+  {id:'e3',src:'Haqiqiy IELTS (2024)',q:'In recent years, there has been a significant decline in the diversity of plant and animal species in many parts of the world.\n\nWhat are the main causes of this? What measures could be taken to address it?\n\nWrite at least 250 words.'},
+  {id:'e4',src:'Haqiqiy IELTS (2023–2024)',q:'Large companies sponsor sports events to advertise their products. Some people think this is good for sport, while others feel there are disadvantages.\n\nDiscuss both views and give your own opinion.\n\nWrite at least 250 words.'},
+  {id:'e5',src:'Cambridge IELTS (classic)',q:'Some people believe that unpaid community service should be a compulsory part of high school and university programmes.\n\nTo what extent do you agree or disagree?\n\nWrite at least 250 words.'},
+  {id:'e6',src:'Haqiqiy IELTS (2025–2026)',q:'Solar energy is becoming increasingly popular as a source of household energy in many countries.\n\nWhy is this? What are the advantages and disadvantages of solar energy?\n\nWrite at least 250 words.'},
+  {id:'e7',src:'Haqiqiy IELTS (2023)',q:'Rich countries often give money to poorer countries, but this does not always solve poverty. Therefore, developed countries should provide other types of help instead.\n\nTo what extent do you agree or disagree?\n\nWrite at least 250 words.'},
+  {id:'e8',src:'Haqiqiy IELTS (2023)',q:'Some cities have introduced vehicle-free days on which private cars are banned from the city centre. People are encouraged to use public transport on those days.\n\nDo the advantages outweigh the disadvantages?\n\nWrite at least 250 words.'},
+  {id:'e9',src:'Cambridge IELTS (classic)',q:'Some people think that parents should teach children how to be good members of society. Others believe that school is the place to learn this.\n\nDiscuss both views and give your own opinion.\n\nWrite at least 250 words.'},
+  {id:'e10',src:'Haqiqiy IELTS (2022–2023)',q:'Many people are now working longer hours than they did in the past.\n\nWhat are the causes of this? Is this a positive or negative development?\n\nWrite at least 250 words.'},
+  {id:'e11',src:'Haqiqiy IELTS (2023)',q:'Some people argue that it is better to live in a large city, while others prefer to live in a small town or rural area.\n\nDiscuss both views and give your own opinion.\n\nWrite at least 250 words.'},
+  {id:'e12',src:'Haqiqiy IELTS (2024)',q:'While many people go to university to study academic subjects, others argue that more students should be encouraged to do vocational training because there is a serious lack of skilled workers.\n\nDo you agree or disagree?\n\nWrite at least 250 words.'}
 ];
 
 const sh=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;};
@@ -358,37 +307,110 @@ function closeModal(){$('modal').classList.add('hidden');sv('seen',1);}
 function saveName(){S.name=$('nameinp').value.trim();sv('name',S.name);}
 function getName(){return S.name||'Candidate';}
 
-function init(){
-  if(ld('seen'))$('modal').classList.add('hidden');
-  const n=ld('name')||'';
-  S.name=n;$('nameinp').value=n;
-  show('s-home');
+/* ── SETUP SCREEN ── */
+function setupTask(mode){
+  S.mode=mode;S.phase=null;S.t1r='';S.t2r='';S.r1=null;S.r2=null;S.img=null;S.imgType=null;
+  const isT1=(mode===1||mode==='full');
+  $('setup-title').textContent=mode==='full'?"To'liq Test — Task 1 savoli":mode===1?"Task 1 — Savol manbai":"Task 2 — Savol manbai";
+  $('imgzone').style.display=isT1?'block':'none';
+  $('txtzone').style.display=isT1?'none':'block';
+  $('imgprev').style.display='none';$('phint').style.display='block';
+  $('imgzone').classList.remove('hasimg');
+  $('tasktxt').value='';$('custbtn').disabled=true;
+  show('s-setup');
 }
 
-function go(mode){
-  S.mode=mode;S.phase=null;S.t1r='';S.t2r='';S.r1=null;S.r2=null;
+function onTT(){$('custbtn').disabled=$('tasktxt').value.trim().length<20;}
+
+function startCustom(){
+  const isT1=(S.mode===1||S.mode==='full');
+  if(isT1){
+    const t={id:'cdi',type:'cdi_img',src:'CDI_Report — Haqiqiy IELTS imtihoni',
+      q:'Yuqoridagi grafikni tasvirlang.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.'};
+    S.t1=t;
+    if(S.mode==='full'){S.phase='t1';S.t2=sh(T2)[0];}
+    loadTask(1,t,20);
+  }else{
+    const txt=$('tasktxt').value.trim();
+    const t={id:'cdi',type:'cdi_txt',src:'CDI_Report — Haqiqiy IELTS imtihoni',q:txt};
+    S.t2=t;
+    loadTask(2,t,40);
+  }
+  show('s-task');
+}
+
+function startBuiltin(){
+  S.img=null;S.imgType=null;
   const t1s=sh(T1),t2s=sh(T2);
-  if(mode==='full'){S.phase='t1';S.t1=t1s[0];S.t2=t2s[0];loadTask(1,S.t1,20);}
-  else if(mode===1){S.t1=t1s[0];loadTask(1,S.t1,20);}
+  if(S.mode==='full'){S.phase='t1';S.t1=t1s[0];S.t2=t2s[0];loadTask(1,S.t1,20);}
+  else if(S.mode===1){S.t1=t1s[0];loadTask(1,S.t1,20);}
   else{S.t2=t2s[0];loadTask(2,S.t2,40);}
   show('s-task');
 }
 
-function startT2(){S.phase='t2';loadTask(2,S.t2,40);show('s-task');}
+/* ── IMAGE PASTE ── */
+document.addEventListener('paste',function(e){
+  const act=document.querySelector('.screen.active');
+  if(!act||act.id!=='s-setup'||$('imgzone').style.display==='none')return;
+  for(const item of e.clipboardData.items){
+    if(item.type.startsWith('image/')){e.preventDefault();loadImg(item.getAsFile());return;}
+  }
+});
+function handleFI(inp){if(inp.files[0])loadImg(inp.files[0]);}
+function loadImg(file){
+  const r=new FileReader();
+  r.onload=async e=>{
+    const comp=await compressImg(e.target.result,1400,.88);
+    S.img=comp;S.imgType='image/jpeg';
+    $('imgprev').src=comp;$('imgprev').style.display='block';
+    $('phint').style.display='none';
+    $('imgzone').classList.add('hasimg');
+    $('custbtn').disabled=false;
+  };
+  r.readAsDataURL(file);
+}
+function compressImg(url,maxW,q){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      let{width:w,height:h}=img;if(w>maxW){h=h*maxW/w;w=maxW;}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);res(c.toDataURL('image/jpeg',q));
+    };img.src=url;
+  });
+}
 
+/* ── LOAD TASK ── */
 function loadTask(num,task,mins){
   $('ttitle').textContent='Writing Task '+num;
-  $('tsub').textContent=num===1?'Kamida 150 so\'z yozing':'Kamida 250 so\'z yozing';
+  $('tsub').textContent=num===1?"Kamida 150 so'z yozing":"Kamida 250 so'z yozing";
   S.min=num===1?150:250;
   $('srcnote').textContent='✅ '+task.src;
   const pfx=S.mode==='full'?'FULL — ':'';
-  const ic={line:'📈',bar:'📊',doughnut:'🥧',letter:'✉️'};
+  const ic={line:'📈',bar:'📊',doughnut:'🥧',letter:'✉️',cdi_img:'📷',cdi_txt:'📝'};
   $('tbadge').innerHTML=(ic[task.type]||'📝')+' '+pfx+'TASK '+num;
+
   killChart();
+  // Remove old custom image if any
+  const old=$('custimg');if(old)old.remove();
+  $('cht').style.display='block';
+
   const cz=$('czone'),qt=$('qtxt'),ql=$('qlet');
-  if(task.type==='letter'){
-    cz.style.display='none';qt.style.display='none';
-    ql.style.display='block';ql.textContent=task.q;
+
+  if(task.type==='cdi_img'){
+    // Show pasted image inside chart zone
+    cz.style.display='block';qt.style.display='block';ql.style.display='none';
+    qt.textContent=task.q;
+    const img=document.createElement('img');
+    img.id='custimg';img.src=S.img;
+    img.style.cssText='width:100%;border-radius:8px;display:block;margin-bottom:8px';
+    $('cht').style.display='none';
+    $('chbox').prepend(img);
+  }else if(task.type==='cdi_txt'){
+    cz.style.display='none';qt.style.display='block';ql.style.display='none';
+    qt.textContent=task.q;
+  }else if(task.type==='letter'){
+    cz.style.display='none';qt.style.display='none';ql.style.display='block';ql.textContent=task.q;
   }else{
     cz.style.display='block';qt.style.display='block';ql.style.display='none';
     qt.textContent=task.q;
@@ -398,60 +420,52 @@ function loadTask(num,task,mins){
       else if(task.type==='doughnut')drawPie(task);
     },80);
   }
+
   $('ta').value='';updateWC(0);$('gobtn').disabled=true;
-  $('whint').textContent='Kamida '+S.min+' ta so\'z yozing';
+  $('whint').textContent='Kamida '+S.min+" ta so'z yozing";
   startTimer(mins*60);
 }
 
-function startTimer(sec){
-  stopTimer();S.left=sec;renderT(sec);
-  S.tmr=setInterval(()=>{S.left--;renderT(S.left);if(S.left<=0){stopTimer();alert('⏰ Vaqt tugadi!');doSubmit();}},1000);
-}
-function stopTimer(){if(S.tmr){clearInterval(S.tmr);S.tmr=null;}}
-function renderT(s){
-  $('tmrv').textContent=fmt(s);
-  $('tmr').className='tmr'+(s<=300?' warn':'');
+function startT2(){
+  S.img=null;S.imgType=null; // T2 uses text, not image
+  S.phase='t2';loadTask(2,S.t2,40);show('s-task');
 }
 
-function onType(){
-  const n=wc($('ta').value);
-  updateWC(n);
-  $('gobtn').disabled=(n<10);
-}
+/* ── TIMER ── */
+function startTimer(sec){stopTimer();S.left=sec;renderT(sec);S.tmr=setInterval(()=>{S.left--;renderT(S.left);if(S.left<=0){stopTimer();alert('⏰ Vaqt tugadi!');doSubmit();}},1000);}
+function stopTimer(){if(S.tmr){clearInterval(S.tmr);S.tmr=null;}}
+function renderT(s){$('tmrv').textContent=fmt(s);$('tmr').className='tmr'+(s<=300?' warn':'');}
+
+/* ── WORD COUNT ── */
+function onType(){const n=wc($('ta').value);updateWC(n);$('gobtn').disabled=(n<10);}
 function updateWC(n){
   const b=$('wcbadge'),fl=$('wcfl'),m=S.min;
-  b.textContent=n+" so'z";
-  b.className='wc'+(n>=m?' ok':n>=m*.6?' low':'');
-  fl.style.width=Math.min(100,(n/m)*100)+'%';
-  fl.className='wcfl'+(n>=m?' ok':'');
+  b.textContent=n+" so'z";b.className='wc'+(n>=m?' ok':n>=m*.6?' low':'');
+  fl.style.width=Math.min(100,(n/m)*100)+'%';fl.className='wcfl'+(n>=m?' ok':'');
 }
 
+/* ── CHARTS ── */
 const bOpt=(t,y,x)=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:10,font:{size:11}}},title:{display:true,text:t,font:{size:12,weight:'bold'},padding:{bottom:8}}},scales:{y:{title:{display:true,text:y,font:{size:10}},grid:{color:'#E8EEF6'}},x:{title:{display:true,text:x,font:{size:10}},grid:{color:'#E8EEF6'}}}});
-function drawLine(t){const ctx=$('cht').getContext('2d');S.chart=new Chart(ctx,{type:'line',data:{labels:t.lbls,datasets:t.ds.map(d=>({label:d.l,data:d.d,borderColor:d.c,backgroundColor:d.c+'18',tension:.4,fill:false,pointRadius:4,pointHoverRadius:6,borderWidth:2.5}))},options:bOpt(t.title,t.yLbl,t.xLbl)});}
+function drawLine(t){const ctx=$('cht').getContext('2d');S.chart=new Chart(ctx,{type:'line',data:{labels:t.lbls,datasets:t.ds.map(d=>({label:d.l,data:d.d,borderColor:d.c,backgroundColor:d.c+'18',tension:.4,fill:false,pointRadius:4,borderWidth:2.5}))},options:bOpt(t.title,t.yLbl,t.xLbl)});}
 function drawBar(t){const ctx=$('cht').getContext('2d');S.chart=new Chart(ctx,{type:'bar',data:{labels:t.lbls,datasets:t.ds.map(d=>({label:d.l,data:d.d,backgroundColor:d.c+'CC',borderColor:d.c,borderWidth:1.5,borderRadius:3}))},options:bOpt(t.title,t.yLbl,t.xLbl)});}
-function drawPie(t){const ctx=$('cht').getContext('2d');S.chart=new Chart(ctx,{type:'doughnut',data:{labels:t.lbls,datasets:[{data:t.data,backgroundColor:t.clrs,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:8,font:{size:11}}},title:{display:true,text:t.title,font:{size:12,weight:'bold'},padding:{bottom:6}}}}});}
+function drawPie(t){const ctx=$('cht').getContext('2d');S.chart=new Chart(ctx,{type:'doughnut',data:{labels:t.lbls,datasets:[{data:t.data,backgroundColor:t.clrs,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:8,font:{size:11}}},title:{display:true,text:t.title,font:{size:12,weight:'bold'}}}}});}
 function killChart(){if(S.chart){S.chart.destroy();S.chart=null;}}
 
 function askBack(){
   if(S.busy)return;
-  if(confirm("Testni tark etmoqchimisiz? Yozganlaringiz saqlanmaydi.")){
-    stopTimer();killChart();show('s-home');
-  }
+  if(confirm("Testni tark etmoqchimisiz?")){stopTimer();killChart();show('s-home');}
 }
 
+/* ── SUBMIT ── */
 async function doSubmit(){
   if(S.busy)return;
-  const txt=$('ta').value.trim();
-  if(!txt){alert('Avval yozing!');return;}
+  const txt=$('ta').value.trim();if(!txt){alert('Avval yozing!');return;}
   const words=wc(txt);
-  if(words<S.min){
-    if(!confirm('So\'z soni kam ('+words+'/'+S.min+'). Baribir topshirasizmi?'))return;
-  }
+  if(words<S.min){if(!confirm('So\'z soni kam ('+words+'/'+S.min+'). Baribir topshirasizmi?'))return;}
   const num=S.mode==='full'?(S.phase==='t1'?1:2):S.mode;
   const task=num===1?S.t1:S.t2;
   if(num===1)S.t1r=txt;else S.t2r=txt;
-  stopTimer();S.busy=true;
-  show('s-load');animLoad();
+  stopTimer();S.busy=true;show('s-load');animLoad();
   try{
     const res=await evalCall(num,task.q,txt);
     if(num===1)S.r1=res;else S.r2=res;
@@ -460,12 +474,14 @@ async function doSubmit(){
     else{buildResults();show('s-results');}
   }catch(err){
     S.busy=false;show('s-task');
-    alert('Xatolik: '+err.message+'\nQaytadan urinib ko\'ring.');
+    alert('Xatolik: '+err.message);
   }
 }
 
 async function evalCall(num,q,resp){
-  const r=await fetch('/api/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({taskNumber:num,taskQuestion:q,userResponse:resp,userName:getName()})});
+  const body={taskNumber:num,taskQuestion:q,userResponse:resp,userName:getName()};
+  if(S.img){body.taskImage=S.img;body.taskImageType=S.imgType||'image/jpeg';}
+  const r=await fetch('/api/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
   if(!r.ok||!d.success)throw new Error(d.error||'Server xatosi');
   return d.data;
@@ -473,15 +489,11 @@ async function evalCall(num,q,resp){
 
 function animLoad(){
   for(let i=0;i<4;i++)$('li'+i).className='ldi';
-  let i=0;
-  (function n(){
-    if(i>0)$('li'+(i-1)).className='ldi done';
-    if(i<4){$('li'+i).className='ldi act';i++;setTimeout(n,1100+Math.random()*500);}
-  })();
+  let i=0;(function n(){if(i>0)$('li'+(i-1)).className='ldi done';if(i<4){$('li'+i).className='ldi act';i++;setTimeout(n,1100+Math.random()*500);}})();
 }
 
+/* ── RESULTS ── */
 const fsc=n=>n%1===0?n.toFixed(0):n.toFixed(1);
-
 function buildResults(){
   const full=S.mode==='full',r1=S.r1,r2=S.r2,main=full?null:(S.mode===1?r1:r2);
   $('rsnm').textContent=getName();
@@ -491,32 +503,35 @@ function buildResults(){
   let h='';
   if(full){
     h+=`<div class="dual"><div class="minib"><div class="minibt">Task 1</div><div class="minibs">${fsc(r1.overall)}</div><div class="minibsl">Band</div></div><div class="minib"><div class="minibt">Task 2</div><div class="minibs">${fsc(r2.overall)}</div><div class="minibsl">Band</div></div></div>`;
-    h+=critC('Task 1 — Kriteriyalar',r1,1)+critC('Task 2 — Kriteriyalar',r2,2)+sumC('Task 1 — Tahlil',r1)+sumC('Task 2 — Tahlil',r2);
-  }else{
-    h+=critC("Kriteriyalar bo'yicha Ball",main,S.mode)+sumC('Batafsil Tahlil va Maslahat',main);
-  }
+    h+=cC("Task 1 — Kriteriyalar",r1,1)+cC("Task 2 — Kriteriyalar",r2,2)+sC("Task 1 — Tahlil",r1)+sC("Task 2 — Tahlil",r2);
+  }else{h+=cC("Kriteriyalar bo'yicha Ball",main,S.mode)+sC('Batafsil Tahlil va Maslahat',main);}
   h+=`<div class="actrow"><button class="actbtn p" onclick="retry()">🔄 Qayta urinish</button><button class="actbtn s" onclick="home()">🏠 Bosh sahifa</button></div>`;
-  h+=`<p class="ftr">RAKHMANOV | IELTS &middot; @rakhmanovcs &middot; AI-powered</p>`;
+  h+=`<p class="ftr">RAKHMANOV | IELTS · @rakhmanovcs</p>`;
   body.innerHTML=h;
   setTimeout(()=>body.querySelectorAll('.crfill').forEach(el=>el.style.width=el.dataset.w+'%'),250);
 }
 
-function critC(title,r,num){
+function cC(title,r,num){
   const tl=r.ta_label||(num===1?'Task Achievement':'Task Response');
   const rows=[{n:tl,s:r.ta_score,f:r.ta_feedback},{n:'Coherence & Cohesion',s:r.cc_score,f:r.cc_feedback},{n:'Lexical Resource',s:r.lr_score,f:r.lr_feedback},{n:'Gramm. Range & Accuracy',s:r.gra_score,f:r.gra_feedback}];
   return `<div class="rc"><h3>${title}</h3>${rows.map(c=>`<div class="cr"><div class="crow"><span class="crnm">${c.n}</span><span class="crsc">${c.s}</span></div><div class="crbar"><div class="crfill" data-w="${((c.s/9)*100).toFixed(1)}" style="width:0%"></div></div><div class="crfb">${c.f||''}</div></div>`).join('')}</div>`;
 }
-function sumC(title,r){
+function sC(title,r){
   const s=(r.strengths||[]).map(x=>`<li>${x}</li>`).join('');
   const imp=(r.improvements||[]).map(x=>`<li>${x}</li>`).join('');
   const corr=r.corrected_example||'';
   return `<div class="rc"><h3>${title}</h3><p class="sumtxt">${r.summary||''}</p>${s?`<p class="listh g">✅ Kuchli tomonlar</p><ul class="liul g">${s}</ul>`:''}${imp?`<p class="listh a">📌 Yaxshilash kerak</p><ul class="liul a">${imp}</ul>`:''}${corr?`<p class="listh" style="color:var(--mt);font-size:11px;margin-top:6px">✏️ Misol tuzatish</p><div class="corr">${corr}</div>`:''}</div>`;
 }
-
-function retry(){go(S.mode);}
+function retry(){setupTask(S.mode);}
 function home(){killChart();show('s-home');}
 
 window.addEventListener('beforeunload',e=>{if(S.busy||(S.tmr&&$('ta')&&$('ta').value.length>30)){e.preventDefault();e.returnValue='';}});
+
+function init(){
+  if(ld('seen'))$('modal').classList.add('hidden');
+  S.name=ld('name')||'';$('nameinp').value=S.name;
+  show('s-home');
+}
 init();
 </script>
 </body>
