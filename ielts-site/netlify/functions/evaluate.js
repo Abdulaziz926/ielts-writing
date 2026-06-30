@@ -36,13 +36,22 @@ exports.handler = async function (event) {
     };
 
     const scoringRules = `
-IELTS BAND DESCRIPTORS (half-band only: 4.0 4.5 5.0 5.5 6.0 6.5 7.0 7.5 8.0 8.5 9.0):
+CRITICAL FIRST CHECK — read this before scoring anything:
+If the response is random characters/keyboard mashing (e.g. "afaf aevvv"), is totally unrelated to the task topic, is essentially blank, is copied/memorised text unconnected to the question, or contains no coherent English sentences at all — this is official IELTS "Band 0: No rateable language". In this exact case:
+- Set ta_score, cc_score, lr_score, gra_score, and overall ALL to 0 (not 4, not any other number)
+- ta_feedback/summary must explicitly state in simple words that this is not a valid attempt — e.g. "This response consists of random characters/words with no rateable English language, so it cannot be scored."
+- strengths must be exactly ["None — no valid attempt was made"]
+- Skip the band descriptors below entirely for this case.
+
+If the response IS a genuine attempt at the task (even if very weak, short, or full of errors), score normally using the official band descriptors below. Do NOT use Band 0 just because the response is weak, short, or has many errors — Band 0 is ONLY for no rateable language / totally irrelevant / blank responses.
+
+IELTS BAND DESCRIPTORS for genuine attempts (half-band only: 4.0 4.5 5.0 5.5 6.0 6.5 7.0 7.5 8.0 8.5 9.0):
 - Band 9: Expert, virtually no errors, full coverage, wide range
 - Band 8: Very good, rare slips, well organised, wide range
 - Band 7: Good, some errors, adequately organised, good range
 - Band 6: Competent, noticeable errors, adequate range, task generally addressed
 - Band 5: Modest, frequent errors, limited range, task partially addressed
-- Band 4: Limited, numerous errors, very limited range
+- Band 4: Limited, numerous errors, very limited range, but IS a genuine relevant attempt
 
 WORD COUNT: ${wordCount} / minimum ${minWords}${belowMin ? " WARNING: BELOW MINIMUM - penalise " + (taskNumber === 1 ? "Task Achievement" : "Task Response") + " heavily" : ""}
 
@@ -111,33 +120,45 @@ ta_label field must be exactly "${taskNumber === 1 ? "Task Achievement" : "Task 
     const model = "gemini-2.5-flash";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: jsonSchema,
-          temperature: 0.4,
-          maxOutputTokens: 2000
-        }
-      }),
-    });
+    async function callGemini() {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: jsonSchema,
+            temperature: 0.4,
+            maxOutputTokens: 4096
+          }
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error?.message || "Gemini API xatosi");
+      if (!response.ok) {
+        throw new Error(data.error?.message || "Gemini API xatosi");
+      }
+
+      const candidate = data.candidates && data.candidates[0];
+      if (!candidate || !candidate.content || !candidate.content.parts || !candidate.content.parts[0]) {
+        const reason = candidate?.finishReason || "noma'lum";
+        throw new Error("Gemini bo'sh javob qaytardi (sabab: " + reason + ")");
+      }
+
+      const raw = candidate.content.parts[0].text;
+      return JSON.parse(raw);
     }
 
-    const candidate = data.candidates && data.candidates[0];
-    if (!candidate || !candidate.content || !candidate.content.parts || !candidate.content.parts[0]) {
-      throw new Error("Gemini javob bermadi (bo'sh javob)");
+    let scoreData;
+    try {
+      scoreData = await callGemini();
+    } catch (firstErr) {
+      console.error("Birinchi urinish muvaffaqiyatsiz:", firstErr.message);
+      // Javob uzilib qolgan yoki JSON buzilgan bo'lishi mumkin — bir marta qayta urinamiz
+      scoreData = await callGemini();
     }
-
-    const raw = candidate.content.parts[0].text;
-    const scoreData = JSON.parse(raw);
 
     return { statusCode: 200, headers, body: JSON.stringify({ success: true, data: scoreData }) };
 
