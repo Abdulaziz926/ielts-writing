@@ -35,27 +35,73 @@ exports.handler = async function (event) {
       required: ["ta_label","ta_score","ta_feedback","cc_score","cc_feedback","lr_score","lr_feedback","gra_score","gra_feedback","overall","summary","strengths","improvements","corrected_example"]
     };
 
+    // ─────────────────────────────────────────────────────────
+    // FULL OFFICIAL IELTS BAND DESCRIPTORS (paraphrased from the
+    // public IELTS.org Task 1 / Task 2 Band Descriptor tables)
+    // ─────────────────────────────────────────────────────────
+    const T1_BANDS = `
+OFFICIAL TASK 1 BAND DESCRIPTORS (use these to anchor every score):
+
+Band 9 — TA: fully and appropriately satisfies all requirements; only extremely rare minor lapses. CC: message follows effortlessly; cohesion barely noticeable; paragraphing skilful. LR: full flexibility and precise, natural vocabulary; minor spelling/word-formation slips are extremely rare. GRA: wide range of structures used with full flexibility and control; virtually error-free.
+
+Band 8 — TA: covers all requirements appropriately and sufficiently; key features/bullet points skilfully selected and clearly presented; only occasional minor omissions. CC: logically sequenced, well-managed cohesion, occasional minor lapses, good paragraphing. LR: wide resource used fluently and flexibly; skilful use of less common/idiomatic items; occasional inaccuracies that barely affect meaning. GRA: wide range of structures, majority of sentences error-free, only occasional non-systematic errors.
+
+Band 7 — TA: covers the requirements; content relevant and mostly accurate with a few omissions; key features/bullet points covered and clearly highlighted but could be more fully extended; clear overview present with data appropriately categorised. CC: logically organised with clear progression; cohesive devices used flexibly with some inaccuracy or over/under-use. LR: sufficient range for some flexibility and precision; some less common/idiomatic items used; only a few spelling/word-formation errors. GRA: mix of simple and complex sentences; complex ones less accurate than simple ones; errors occur but rarely impede communication.
+
+Band 6 — TA: focuses on task requirements with appropriate format; key features/bullet points appropriately highlighted but overview may be only partly relevant; some irrelevant/inaccurate detail, or missing/excessive detail. CC: organisation evident but not wholly logical; some lack of overall progression though underlying coherence is sensed; ideas followable but not always fluently linked; cohesive devices sometimes inaccurate, limited or overused. LR: generally adequate vocabulary; meaning clear despite restricted range or imprecision; some spelling/word-formation errors that don't impede communication. GRA: limited and somewhat repetitive range; complex sentences attempted but often faulty; frequent errors may cause some difficulty for the reader; punctuation may be faulty.
+
+Band 5 — TA: generally addresses task requirements but may be mechanical/list-like; key features/bullet points not always fully covered; recounting may lack data support; tone/purpose can be unclear or inconsistent. CC: tendency to focus on details without an overall picture; organisation not always clear; limited/possibly inaccurate use of cohesive devices and reference. LR: limited range, repetitive vocabulary; noticeable errors in spelling/word formation causing some strain for the reader. GRA: only a limited range of structures attempted; frequent grammatical errors that may sometimes impede understanding.
+
+Band 4 — TA: response is an attempt at the task but key features/bullet points are minimal, missing, or wrongly selected; little/no overview; tone or format often inappropriate. CC: little logical organisation; relationship between ideas unclear or inadequately marked; minimal/mechanical use of cohesive devices; little/no paragraphing. LR: limited and inadequate vocabulary for the task; noticeable, possibly disruptive spelling/word-formation errors. GRA: very limited range of structures with rare correct complex attempts; frequent errors that may severely distort meaning.
+
+Band 3 — TA: does not adequately address the requirements; format may be inappropriate; key features/bullet points largely missing or only briefly mentioned, repetitive. CC: little or no organisation of information; no clear progression; minimal control of cohesive devices. LR: extremely limited vocabulary, largely memorised or repeated phrases; very weak control of word formation/spelling. GRA: little control of grammatical forms except in memorised phrases; errors predominate and severely impede meaning.
+
+Band 2 — TA: content barely relates to the task. CC: little relevant message; minimal organisational control. LR: extremely limited vocabulary, virtually no evidence of control. GRA: little or no evidence of sentence forms, except in memorised phrases.
+
+Band 1 — Response of 20 words or fewer, OR content wholly unrelated to the task, OR an entirely memorised/copied script unconnected to the question.
+
+Band 0 — Did not attend/attempt the question in any way; used a language other than English throughout; OR there is clear proof the answer is entirely memorised and disconnected from the task. (Applies in this app whenever the text is random characters/keyboard mashing with no rateable English language.)`;
+
+    const T2_BANDS = `
+OFFICIAL TASK 2 BAND DESCRIPTORS (use these to anchor every score):
+
+Band 9 — TR: fully and appropriately addresses all parts of the task; a fully developed position is given with extremely well-supported, relevant, fully extended ideas. CC: message follows effortlessly; cohesion barely noticeable; paragraphing skilful. LR: full flexibility and precise, natural vocabulary; minor spelling/word-formation slips are extremely rare. GRA: wide range of structures used with full flexibility and control; virtually error-free.
+
+Band 8 — TR: sufficiently addresses all parts; a well-developed response with relevant, extended and well-supported ideas. CC: logically sequenced, well-managed cohesion, occasional minor lapses, good paragraphing. LR: wide resource used fluently and flexibly; skilful use of less common/idiomatic items; occasional inaccuracies that barely affect meaning. GRA: wide range of structures, majority of sentences error-free, only occasional non-systematic errors.
+
+Band 7 — TR: addresses all parts of the prompt, though some parts may be more fully covered than others; a clear overall position is presented throughout; main ideas are extended and supported but there can be a tendency to over-generalise or lack focus in supporting ideas. CC: logically organised with clear progression; cohesive devices used flexibly with some inaccuracy or over/under-use. LR: sufficient range for some flexibility and precision; some less common/idiomatic items used; only a few spelling/word-formation errors. GRA: mix of simple and complex sentences; complex ones less accurate than simple ones; errors occur but rarely impede communication.
+
+Band 6 — TR: addresses all parts of the prompt although some parts may be more fully covered than others; a relevant position is presented though conclusions may become unclear or repetitive; relevant main ideas are presented but some may be underdeveloped or unclear. CC: organisation evident but not wholly logical; ideas followable but not always fluently linked; cohesive devices sometimes inaccurate, limited or overused. LR: generally adequate vocabulary; meaning clear despite restricted range or imprecision; some spelling/word-formation errors that don't impede communication. GRA: limited and somewhat repetitive range; complex sentences attempted but often faulty; frequent errors may cause some difficulty for the reader.
+
+Band 5 — TR: addresses the task only partially; the format may be inappropriate in places; the position is unclear or repetitive; main ideas are presented but limited and not well developed, and there may be irrelevant detail. CC: tendency to focus on details without an overall picture; organisation not always clear; limited/possibly inaccurate cohesive devices. LR: limited range, repetitive vocabulary; noticeable errors in spelling/word formation causing some strain for the reader. GRA: only a limited range of structures attempted; frequent grammatical errors that may sometimes impede understanding.
+
+Band 4 — TR: responds to the task only minimally, or the task is misunderstood in part; position is unclear; few ideas, which are largely undeveloped or irrelevant. CC: little logical organisation; relationship between ideas unclear or inadequately marked; minimal/mechanical use of cohesive devices; little/no paragraphing. LR: limited and inadequate vocabulary for the task; noticeable, possibly disruptive spelling/word-formation errors. GRA: very limited range of structures with rare correct complex attempts; frequent errors that may severely distort meaning.
+
+Band 3 — TR: does not adequately address any part of the task; no clear position is given; little or no evidence of ideas relevant to the task. CC: little or no organisation of information; no clear progression; minimal control of cohesive devices. LR: extremely limited vocabulary, largely memorised or repeated phrases; very weak control of word formation/spelling. GRA: little control of grammatical forms except in memorised phrases; errors predominate and severely impede meaning.
+
+Band 2 — TR: barely responds to the task; almost no relevant content. CC: little relevant message; minimal organisational control. LR: extremely limited vocabulary, virtually no evidence of control. GRA: little or no evidence of sentence forms, except in memorised phrases.
+
+Band 1 — Response of 20 words or fewer, OR content wholly unrelated to the task, OR an entirely memorised/copied script unconnected to the question.
+
+Band 0 — Did not attend/attempt the question in any way; used a language other than English throughout; OR there is clear proof the answer is entirely memorised and disconnected from the task. (Applies in this app whenever the text is random characters/keyboard mashing with no rateable English language.)`;
+
     const scoringRules = `
-CRITICAL FIRST CHECK — read this before scoring anything:
-If the response is random characters/keyboard mashing (e.g. "afaf aevvv"), is totally unrelated to the task topic, is essentially blank, is copied/memorised text unconnected to the question, or contains no coherent English sentences at all — this is official IELTS "Band 0: No rateable language". In this exact case:
-- Set ta_score, cc_score, lr_score, gra_score, and overall ALL to 0 (not 4, not any other number)
-- ta_feedback/summary must explicitly state in simple words that this is not a valid attempt — e.g. "This response consists of random characters/words with no rateable English language, so it cannot be scored."
-- strengths must be exactly ["None — no valid attempt was made"]
-- Skip the band descriptors below entirely for this case.
+${taskNumber === 1 ? T1_BANDS : T2_BANDS}
 
-If the response IS a genuine attempt at the task (even if very weak, short, or full of errors), score normally using the official band descriptors below. Do NOT use Band 0 just because the response is weak, short, or has many errors — Band 0 is ONLY for no rateable language / totally irrelevant / blank responses.
+CRITICAL RULE — apply Band 0 ONLY in these exact cases, never for merely weak writing:
+- Random characters / keyboard mashing (e.g. "afaf aevvv kjkj")
+- Totally unrelated to the task topic
+- Essentially blank or far too short to assess (a handful of words)
+- No coherent English sentences at all
+In these cases set ta_score, cc_score, lr_score, gra_score and overall ALL to 0, and ta_feedback/summary must plainly state this is not a valid, ratable attempt. strengths must be exactly ["None — no valid attempt was made"].
 
-IELTS BAND DESCRIPTORS for genuine attempts (half-band only: 4.0 4.5 5.0 5.5 6.0 6.5 7.0 7.5 8.0 8.5 9.0):
-- Band 9: Expert, virtually no errors, full coverage, wide range
-- Band 8: Very good, rare slips, well organised, wide range
-- Band 7: Good, some errors, adequately organised, good range
-- Band 6: Competent, noticeable errors, adequate range, task generally addressed
-- Band 5: Modest, frequent errors, limited range, task partially addressed
-- Band 4: Limited, numerous errors, very limited range, but IS a genuine relevant attempt
+For ANY genuine attempt — even if very weak, short, or full of errors — do NOT default to Band 0 or inflate to Band 4. Read the actual text closely and match it against the specific wording of each band level above for EACH of the four criteria independently; a candidate's four scores often differ from one another (e.g. TA could be 5 while GRA is 6.5) — do not force them to match.
 
-WORD COUNT: ${wordCount} / minimum ${minWords}${belowMin ? " WARNING: BELOW MINIMUM - penalise " + (taskNumber === 1 ? "Task Achievement" : "Task Response") + " heavily" : ""}
+DEEP ANALYSIS REQUIRED — do not give generic feedback. For each of the four criteria, your feedback MUST reference specific evidence from THIS candidate's actual text: quote or closely paraphrase 1-2 actual phrases/sentences they wrote, name the actual grammatical structures or vocabulary they used (or failed to use), and identify concrete, recurring error patterns (e.g. article omission, subject-verb agreement, run-on sentences, informal register, repeated linking words) rather than vague statements like "some errors occur."
 
-overall = arithmetic mean of the 4 criteria scores, rounded to nearest 0.5. Be honest, do NOT inflate scores. Write all feedback in clear, simple English.`;
+SCORING SCALE: half-bands only — 0, 1, 2, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9.
+WORD COUNT: ${wordCount} / minimum ${minWords}${belowMin ? " — WARNING: BELOW MINIMUM, penalise Task " + (taskNumber === 1 ? "Achievement" : "Response") + " for this" : ""}.
+overall = arithmetic mean of the four criteria scores, rounded to the nearest 0.5. Be a strict, honest examiner — do NOT inflate scores out of politeness. Write all feedback in clear, simple English a B1-level learner can understand.`;
 
     let parts;
     let promptText;
@@ -64,21 +110,15 @@ overall = arithmetic mean of the 4 criteria scores, rounded to nearest 0.5. Be h
       const base64 = taskImage.includes(",") ? taskImage.split(",")[1] : taskImage;
       const mime = taskImageType || "image/jpeg";
 
-      promptText = `You are a senior IELTS examiner with 20 years of experience.
+      promptText = `You are a senior, strict IELTS examiner with 20 years of experience marking real exam scripts.
 
-The attached image is an IELTS Writing Task 1 question from a real recent exam (chart, graph, diagram, table, or map).
+The attached image is an IELTS Writing Task 1 question from a real exam (chart, graph, diagram, table, process, or map).
 
 CANDIDATE: ${userName}
 RESPONSE (${wordCount} words):
 ${userResponse}
 
-First analyse what the image shows. Then score this Task 1 response against the official IELTS band descriptors.
-
-TASK 1 CRITERIA:
-- Task Achievement: All key features covered, data accurately described, clear overview, min 150 words
-- Coherence & Cohesion: Logical sequence, paragraphing, cohesive devices
-- Lexical Resource: Range and accuracy of vocabulary, collocations, spelling
-- Grammatical Range & Accuracy: Variety of structures, frequency of errors
+First, carefully analyse exactly what the image shows (every series, every key figure, trends, comparisons). Then check whether the candidate's response accurately and completely reflects what is actually in the image — penalise Task Achievement if they describe data that is not present or miss major features that are present. Then score the response against the official band descriptors below.
 
 ${scoringRules}
 
@@ -89,19 +129,7 @@ ta_label field must be exactly "Task Achievement".`;
         { inline_data: { mime_type: mime, data: base64 } }
       ];
     } else {
-      const criteria = taskNumber === 1
-        ? `TASK 1 CRITERIA:
-- Task Achievement: Coverage of ALL key features, accurate data, clear overview, min 150 words
-- Coherence & Cohesion: Logical flow, paragraphing, cohesive devices
-- Lexical Resource: Vocabulary range, precision, collocations, spelling
-- Grammatical Range & Accuracy: Structural variety, error frequency`
-        : `TASK 2 CRITERIA:
-- Task Response: Clear position, fully developed ideas, task fully addressed, min 250 words
-- Coherence & Cohesion: Clear progression, logical structure, paragraphing
-- Lexical Resource: Vocabulary range, precision, idiomatic language, spelling
-- Grammatical Range & Accuracy: Wide range of structures, infrequent errors`;
-
-      promptText = `You are a senior IELTS examiner with 20 years of experience. Score this IELTS Writing Task ${taskNumber} response using official IELTS band descriptors.
+      promptText = `You are a senior, strict IELTS examiner with 20 years of experience marking real exam scripts. Score this IELTS Writing Task ${taskNumber} response.
 
 CANDIDATE: ${userName}
 TASK QUESTION: ${taskQuestion}
@@ -109,7 +137,6 @@ TASK QUESTION: ${taskQuestion}
 RESPONSE (${wordCount} words):
 ${userResponse}
 
-${criteria}
 ${scoringRules}
 
 ta_label field must be exactly "${taskNumber === 1 ? "Task Achievement" : "Task Response"}".`;
@@ -129,7 +156,7 @@ ta_label field must be exactly "${taskNumber === 1 ? "Task Achievement" : "Task 
           generationConfig: {
             responseMimeType: "application/json",
             responseSchema: jsonSchema,
-            temperature: 0.4,
+            temperature: 0.3,
             maxOutputTokens: 4096
           }
         }),
@@ -156,7 +183,6 @@ ta_label field must be exactly "${taskNumber === 1 ? "Task Achievement" : "Task 
       scoreData = await callGemini();
     } catch (firstErr) {
       console.error("Birinchi urinish muvaffaqiyatsiz:", firstErr.message);
-      // Javob uzilib qolgan yoki JSON buzilgan bo'lishi mumkin — bir marta qayta urinamiz
       scoreData = await callGemini();
     }
 
