@@ -8,7 +8,7 @@ exports.handler = async function (event) {
   if (event.httpMethod !== "POST") return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
 
   try {
-    const { taskNumber, taskQuestion, userResponse, userName, taskImage, taskImageType } = JSON.parse(event.body);
+    const { taskNumber, taskQuestion, userResponse, userName, taskImage, taskImageType, chartData } = JSON.parse(event.body);
     const words = userResponse.trim().split(/\s+/).filter(w => w.length > 0);
     const wordCount = words.length;
     const minWords = taskNumber === 1 ? 150 : 250;
@@ -30,9 +30,10 @@ exports.handler = async function (event) {
         summary: { type: "string" },
         strengths: { type: "array", items: { type: "string" } },
         improvements: { type: "array", items: { type: "string" } },
-        corrected_example: { type: "string" }
+        corrected_example: { type: "string" },
+        fact_errors: { type: "array", items: { type: "string" } }
       },
-      required: ["ta_label","ta_score","ta_feedback","cc_score","cc_feedback","lr_score","lr_feedback","gra_score","gra_feedback","overall","summary","strengths","improvements","corrected_example"]
+      required: ["ta_label","ta_score","ta_feedback","cc_score","cc_feedback","lr_score","lr_feedback","gra_score","gra_feedback","overall","summary","strengths","improvements","corrected_example","fact_errors"]
     };
 
     // ─────────────────────────────────────────────────────────
@@ -85,6 +86,25 @@ Band 1 — Response of 20 words or fewer, OR content wholly unrelated to the tas
 
 Band 0 — Did not attend/attempt the question in any way; used a language other than English throughout; OR there is clear proof the answer is entirely memorised and disconnected from the task. (Applies in this app whenever the text is random characters/keyboard mashing with no rateable English language.)`;
 
+    // Serialise built-in chart data into a readable table so Gemini can fact-check exact figures
+    function buildChartDataText(cd) {
+      if (!cd) return "";
+      if (cd.type === "doughnut") {
+        const rows = cd.labels.map((l, i) => `${l}: ${cd.values[i]}%`).join("\n");
+        return `\nEXACT CHART DATA (the candidate must accurately reflect these real figures):\nTitle: ${cd.title}\nType: pie/doughnut chart\n${rows}\n`;
+      }
+      const header = "Category".padEnd(10) + " | " + cd.series.map(s => s.name).join(" | ");
+      const rows = cd.labels.map((lab, i) =>
+        String(lab).padEnd(10) + " | " + cd.series.map(s => s.values[i]).join(" | ")
+      ).join("\n");
+      return `\nEXACT CHART DATA (the candidate must accurately reflect these real figures, not invented ones):\nTitle: ${cd.title}\nType: ${cd.type} chart — X axis: ${cd.xLabel} — Y axis: ${cd.yLabel}\n${header}\n${rows}\n`;
+    }
+    const chartDataText = buildChartDataText(chartData);
+
+    const factCheckInstruction = `
+FACTUAL ACCURACY CHECK (Task 1 only, mandatory when chart data is available below or in the attached image):
+Compare EVERY number, comparison, trend, and ranking the candidate states against the actual chart data. Check each one individually. List every factual inaccuracy you find — wrong figures, invented numbers, wrong direction of trend, wrong ranking/comparison, or a claimed "highest/lowest/largest" that is not actually correct — in the "fact_errors" array, each entry written as one sentence: what the candidate claimed, and what the chart actually shows. If there are no factual errors, return an empty array []. Many automated scorers ignore numeric accuracy — you must NOT do that: accuracy of chart data is more important than vocabulary sophistication, and Task Achievement MUST be reduced (sometimes substantially) when the candidate's figures or comparisons don't match the real data.`;
+
     const scoringRules = `
 ${taskNumber === 1 ? T1_BANDS : T2_BANDS}
 
@@ -98,6 +118,7 @@ In these cases set ta_score, cc_score, lr_score, gra_score and overall ALL to 0,
 For ANY genuine attempt — even if very weak, short, or full of errors — do NOT default to Band 0 or inflate to Band 4. Read the actual text closely and match it against the specific wording of each band level above for EACH of the four criteria independently; a candidate's four scores often differ from one another (e.g. TA could be 5 while GRA is 6.5) — do not force them to match.
 
 DEEP ANALYSIS REQUIRED — do not give generic feedback. For each of the four criteria, your feedback MUST reference specific evidence from THIS candidate's actual text: quote or closely paraphrase 1-2 actual phrases/sentences they wrote, name the actual grammatical structures or vocabulary they used (or failed to use), and identify concrete, recurring error patterns (e.g. article omission, subject-verb agreement, run-on sentences, informal register, repeated linking words) rather than vague statements like "some errors occur."
+${taskNumber === 1 ? factCheckInstruction : '\nfact_errors must be an empty array [] for Task 2 (there is no chart data to fact-check).'}
 
 SCORING SCALE: half-bands only — 0, 1, 2, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9.
 WORD COUNT: ${wordCount} / minimum ${minWords}${belowMin ? " — WARNING: BELOW MINIMUM, penalise Task " + (taskNumber === 1 ? "Achievement" : "Response") + " for this" : ""}.
@@ -133,7 +154,7 @@ ta_label field must be exactly "Task Achievement".`;
 
 CANDIDATE: ${userName}
 TASK QUESTION: ${taskQuestion}
-
+${chartDataText}
 RESPONSE (${wordCount} words):
 ${userResponse}
 
