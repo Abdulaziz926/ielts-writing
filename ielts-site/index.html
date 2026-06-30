@@ -183,7 +183,7 @@ textarea{width:100%;border:2px solid var(--bd);border-radius:10px;padding:13px;f
           <p>Rasmni <b>Ctrl+V</b> bilan joylashtiring</p>
           <p class="sub">yoki bosib fayldan tanlang</p>
         </div>
-        <img id="imgprev" style="display:none;width:100%;border-radius:8px;pointer-events:none">
+        <img id="imgprev" style="display:none;max-width:100%;max-height:260px;width:auto;height:auto;border-radius:8px;pointer-events:none;object-fit:contain">
       </div>
       <input type="file" id="fi" accept="image/*" style="display:none" onchange="handleFI(this)">
 
@@ -394,18 +394,19 @@ function loadTask(num,task,mins){
   // Remove old custom image if any
   const old=$('custimg');if(old)old.remove();
   $('cht').style.display='block';
+  $('chbox').style.display='block';
 
   const cz=$('czone'),qt=$('qtxt'),ql=$('qlet');
 
   if(task.type==='cdi_img'){
-    // Show pasted image inside chart zone
+    // Show pasted image — append to czone directly, NOT inside the fixed-height chart box
     cz.style.display='block';qt.style.display='block';ql.style.display='none';
     qt.textContent=task.q;
+    $('chbox').style.display='none';
     const img=document.createElement('img');
     img.id='custimg';img.src=S.img;
-    img.style.cssText='width:100%;border-radius:8px;display:block;margin-bottom:8px';
-    $('cht').style.display='none';
-    $('chbox').prepend(img);
+    img.style.cssText='width:100%;max-height:380px;object-fit:contain;border-radius:8px;display:block;margin:0 auto 4px;background:#fff';
+    cz.insertBefore(img,$('chbox'));
   }else if(task.type==='cdi_txt'){
     cz.style.display='none';qt.style.display='block';ql.style.display='none';
     qt.textContent=task.q;
