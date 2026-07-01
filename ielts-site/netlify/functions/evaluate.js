@@ -200,7 +200,7 @@ corrected_example: take ONE sentence from the response with an error, show BEFOR
 
     if (taskImage) {
       const base64 = taskImage.includes(",") ? taskImage.split(",")[1] : taskImage;
-      const mime   = taskImage.Type || "image/jpeg";
+      const mime   = taskImageType || "image/jpeg";
       parts = [
         { text: `${ROLE}\n\n${T1_PROCESS}\n\n${FEEDBACK_RULES}\n\nCANDIDATE: ${userName}\nRESPONSE (${wordCount} words):\n${userResponse}\n\nThe attached image is the IELTS Writing Task 1 chart/graph/diagram/map. Analyse it carefully before scoring. ta_label must be exactly "Task Achievement".` },
         { inline_data: { mime_type: mime, data: base64 } }
