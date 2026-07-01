@@ -103,7 +103,20 @@ Band 0 — Did not attend/attempt the question in any way; used a language other
 
     const factCheckInstruction = `
 FACTUAL ACCURACY CHECK (Task 1 only, mandatory when chart data is available below or in the attached image):
-Compare EVERY number, comparison, trend, and ranking the candidate states against the actual chart data. Check each one individually. List every factual inaccuracy you find — wrong figures, invented numbers, wrong direction of trend, wrong ranking/comparison, or a claimed "highest/lowest/largest" that is not actually correct — in the "fact_errors" array, each entry written as one sentence: what the candidate claimed, and what the chart actually shows. If there are no factual errors, return an empty array []. Many automated scorers ignore numeric accuracy — you must NOT do that: accuracy of chart data is more important than vocabulary sophistication, and Task Achievement MUST be reduced (sometimes substantially) when the candidate's figures or comparisons don't match the real data.`;
+Judge like a real human IELTS examiner reading the chart visually — NOT like an OCR tool matching exact digits.
+
+DO NOT flag as an error:
+- Reasonable rounding or visual estimation (e.g. chart shows 26 and candidate writes "around 25"; chart shows 18,400 and candidate writes "about 18,000" or "nearly 20,000")
+- Approximate language ("roughly", "about", "just under/over", "nearly", "approximately") that is in the right ballpark
+- Minor rounding that does NOT change which value is higher/lower, the overall trend, or the ranking
+
+ONLY flag in the "fact_errors" array (one sentence each: what the candidate claimed vs what the chart actually shows) when:
+- The trend direction is wrong (e.g. candidate says it increased when it actually decreased or stayed flat)
+- A comparison or ranking is wrong (e.g. candidate says X was the highest/lowest/largest when it was not)
+- The candidate invents a figure, category, or data point that does not appear in the chart at all
+- A numerical estimate is clearly and substantially inconsistent with the chart — in a different range entirely, not just rounded
+
+If there are no genuine errors by these standards, return an empty array []. Task Achievement should only be reduced for these genuine substantive errors — never for reasonable approximation, rounding, or visual estimation.`;
 
     const scoringRules = `
 ${taskNumber === 1 ? T1_BANDS : T2_BANDS}
